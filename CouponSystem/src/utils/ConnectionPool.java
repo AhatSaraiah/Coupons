@@ -10,12 +10,6 @@ import java.util.TreeSet;
 
 public class ConnectionPool {
 
-	private static int max_num_of_conn=10;
-	private static final String DB_URL= "jdbc:mysql://127.0.0.1:3306/coupon_system?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-	private static final String user ="root";
-	private static final String password="1Qazqaz*";
-	
-	//private static Set<Connection> connections=new TreeSet<Connection>();
 	private  static ConnectionPool instance=null;
 	private static Connection connection;
 	private static Set<Connection> inUseConnections =new HashSet<Connection>();
@@ -26,8 +20,8 @@ public class ConnectionPool {
 		try { 
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			
-			for (int i = 0; i < max_num_of_conn; i++) { 
-				connection=DriverManager.getConnection(DB_URL, user, password);
+			for (int i = 0; i < Utilities.max_num_of_conn; i++) { 
+				connection=DriverManager.getConnection(Utilities.DB_URL, Utilities.user, Utilities.password);
 				availableConnections.add(connection);
 				System.out.println("connection " + i + " added successfully");
 			}
