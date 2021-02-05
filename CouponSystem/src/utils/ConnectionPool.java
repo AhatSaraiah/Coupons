@@ -79,26 +79,3 @@ public class ConnectionPool {
 		}
 	}
 }
-
-//	public  Connection getConnection() throws SQLException, InterruptedException 
-//	{ 
-//		Connection conn = null ;
-//		synchronized(connections) {
-//			while(connections.isEmpty()) {
-//				connections.wait();
-//			}
-//		}
-//		conn = ((TreeSet<Connection>) connections).last();
-//		connections.remove(((TreeSet<Connection>) connections).last()); 
-//
-//		return conn;
-//	}
-
-
-//	public void restoreConnection(Connection connection) 
-//	{ 
-//		synchronized(connections) {
-//			connections.add(connection); 
-//			connections.notify();
-//		}
-//	}
