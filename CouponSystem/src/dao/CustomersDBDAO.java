@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import model.Company;
 import model.Customer;
 import utils.ConnectionPool;
 import utils.MyException;
@@ -76,8 +77,6 @@ public class CustomersDBDAO implements CustomersDAO {
 
 	}
 
-
-
 	@Override
 	public void updateCustomer(Customer customer) throws SQLException, InterruptedException {
 		try {
@@ -127,16 +126,20 @@ public class CustomersDBDAO implements CustomersDAO {
 
 	@Override
 	public ArrayList<Customer> getAllCustomers() throws SQLException, InterruptedException {
-		ArrayList<Customer> customers=new ArrayList<>();
+		ArrayList<Customer> customers=new ArrayList<Customer>();
 		try {
-
 			PreparedStatement pdStatement = returnStatement("SELECT * FROM coupon_system.customers");
 			ResultSet rs = pdStatement.executeQuery();
-
 			while (rs.next()){
-				Customer customer=new Customer(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
+				Customer customer=new Customer();
+				customer.setId(rs.getInt(1));
+				customer.setFirstName(rs.getString(2));
+				customer.setLastName(rs.getString(3));
+				customer.setEmail(rs.getString(4));
+				customer.setPassword(rs.getString(5));
 				customers.add(customer);
-			}	    
+			}	  
+
 			pdStatement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -146,12 +149,18 @@ public class CustomersDBDAO implements CustomersDAO {
 
 	@Override
 	public Customer getOneCustomer(int customerID) throws SQLException, InterruptedException {
-		Customer customer=null;
+		Customer customer=new Customer();
 		try {
 
 			PreparedStatement pdStatement = returnStatement("SELECT * FROM coupon_system.customers where ID=?");
+			pdStatement.setInt(1,customerID);
 			ResultSet rs = pdStatement.executeQuery();
-			customer=new Customer(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
+			if(rs.next()) {
+				customer.setFirstName(rs.getString(2));
+				customer.setLastName(rs.getString(3));
+				customer.setEmail(rs.getString(4));
+				customer.setPassword(rs.getString(5));
+			}
 
 			pdStatement.close();
 		} catch (SQLException e) {

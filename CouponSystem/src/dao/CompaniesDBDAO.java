@@ -144,14 +144,18 @@ public class CompaniesDBDAO implements CompaniesDAO {
 
 	@Override
 	public ArrayList<Company> getAllCompanies() throws SQLException, InterruptedException {
-		ArrayList<Company> companies=new ArrayList<>();
+		ArrayList<Company> companies=new ArrayList<Company>();
 		try {
 
 			PreparedStatement pdStatement = returnStatement("SELECT * FROM coupon_system.companies");
 			ResultSet rs = pdStatement.executeQuery();
 
 			while (rs.next()){
-				Company company=new Company(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
+				Company company=new Company();
+				company.setId(rs.getInt(1));
+				company.setName(rs.getString(2));
+				company.setEmail(rs.getString(3));
+				company.setPassword(rs.getString(4));
 				companies.add(company);
 			}	    
 			pdStatement.close();
@@ -163,13 +167,17 @@ public class CompaniesDBDAO implements CompaniesDAO {
 
 	@Override
 	public Company getOneCompany(int companyID)throws SQLException, InterruptedException {
-		Company company=null;
+		Company company=new Company();
 		try {
 
 			PreparedStatement pdStatement = returnStatement("SELECT * FROM coupon_system.companies where ID=?");
+			pdStatement.setInt(1,companyID);
 			ResultSet rs = pdStatement.executeQuery();
-			company=new Company(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
-
+			if(rs.next()) {
+				company.setName(rs.getString(2));
+				company.setEmail(rs.getString(3));
+				company.setPassword(rs.getString(4));
+			}
 			pdStatement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

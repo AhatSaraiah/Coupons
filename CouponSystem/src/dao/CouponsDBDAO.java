@@ -115,14 +115,25 @@ public class CouponsDBDAO implements CouponsDAO {
 
 	@Override
 	public ArrayList<Coupon> getAllCoupons() throws SQLException, InterruptedException {
-		ArrayList<Coupon> coupons=new ArrayList<>();
+		ArrayList<Coupon> coupons=new ArrayList<Coupon>();
 		try {
 
 			PreparedStatement pdStatement =returnStatement("SELECT * FROM coupon_system.coupons");
 			ResultSet rs = pdStatement.executeQuery();
 
-			while (rs.next()){
-				Coupon coupon=new Coupon(rs.getInt(1),rs.getInt(2),(Category)rs.getObject(3), rs.getString(4), rs.getString(5),rs.getDate(6),rs.getDate(7),rs.getInt(8), rs.getDouble(9),rs.getString(10));
+			while(rs.next()) {
+				Coupon coupon=new Coupon();
+				coupon.setId(rs.getInt(1));
+				coupon.setCompanyId(rs.getInt(2));
+				coupon.setCategory((Category)rs.getObject(3));
+				coupon.setTitle(rs.getString(4));
+				coupon.setDescription(rs.getString(5));
+				coupon.setStartDate(rs.getDate(6));
+				coupon.setEndDate(rs.getDate(7));
+				coupon.setAmount(rs.getInt(8));
+				coupon.setPrice(rs.getDouble(9));
+				coupon.setImage(rs.getString(10));
+
 				coupons.add(coupon);
 			}	    
 			pdStatement.close();
@@ -135,12 +146,24 @@ public class CouponsDBDAO implements CouponsDAO {
 
 	@Override
 	public Coupon getOneCoupon(int couponID) throws SQLException, InterruptedException {
-		Coupon coupon=null;
+		Coupon coupon=new Coupon();
 		try {
 			PreparedStatement pdStatement = returnStatement("SELECT * FROM coupon_system.coupons where ID=?");
+			pdStatement.setInt(1,couponID);
 
 			ResultSet rs = pdStatement.executeQuery();
-			coupon=new Coupon(rs.getInt(1),rs.getInt(2),(Category)rs.getObject(3), rs.getString(4), rs.getString(5),rs.getDate(6),rs.getDate(7),rs.getInt(8), rs.getDouble(9),rs.getString(10));
+			if(rs.next()) {
+				coupon.setCompanyId(rs.getInt(2));
+				coupon.setCategory((Category)rs.getObject(3));
+				coupon.setTitle(rs.getString(4));
+				coupon.setDescription(rs.getString(5));
+				coupon.setStartDate(rs.getDate(6));
+				coupon.setEndDate(rs.getDate(7));
+				coupon.setAmount(rs.getInt(8));
+				coupon.setPrice(rs.getDouble(9));
+				coupon.setImage(rs.getString(10));
+
+			}
 
 			pdStatement.close();
 		} catch (SQLException e) {
